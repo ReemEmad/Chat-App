@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register</title>
+    <script defer src="http://localhost:3000/socket.io/socket.io.js"></script>
+  </head>
+
+  <style>
+    button {
+      padding: 10px;
+      background: rgb(115, 142, 198);
+      border: none;
+      color: #ffff;
+      border-radius: 2px;
+    }
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+    #google {
+      padding: 10px;
+      background: #ea483a;
+      border: none;
+      color: #ffff;
+      border-radius: 2px;
+    }
+  </style>
+  <body>
+    <div>
+      <h1>Registration</h1>
+      <form id="reg-form">
+        <input id="uname" type="text" placeholder="username" />
+        <input id="age" type="number" placeholder="age" />
+        <input id="pass" type="password" placeholder="password" />
+        <input type="submit" value="submit" />
+        <br />
+        <br />
+        or
+        <button>
+          <a href="/auth/facebook">Sign up with facebook </a>
+        </button>
+        <button id="google">
+          <a href="/auth/google">Sign up with google </a>
+        </button>
+      </form>
+    </div>
+
+    <script>
+      const form = document.getElementById("reg-form")
+      form.addEventListener("submit", registerUser)
+
+      async function registerUser(e) {
+        e.preventDefault()
+        const uname = document.getElementById("uname").value
+        const age = document.getElementById("age").value
+        const password = document.getElementById("pass").value
+
+        const result = await fetch("http://127.0.0.1:4300/api/register", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            username: uname,
+            age,
+            password,
+          }),
+        })
+          .then((res) => res.json())
+          .catch((error) => console.log("Error:", error))
+
+        if (result) {
+          window.location.href = "http://localhost:4300/"
+        }
+      }
+    </script>
+  </body>
+</html>
